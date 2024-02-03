@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f8f9fa;
+            background-image: url("https://tse4.mm.bing.net/th?id=OIP.KidRDUNmdaYPJbXrw2oaJQHaEK&pid=Api&P=0&h=180"); /* Replace with your image file path */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            overflow: hidden; 
+        }
+
+        #weather-container {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #error-message {
+            color: #dc3545;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather App</h1>
+    <p>Enter a city name to get the current weather:</p>
+
+    <input type="text" id="cityInput" placeholder="Enter city">
+    <button onclick="getWeather()">Get Weather</button>
+
+    <div id="error-message"></div>
+    <div id="weather-container"></div>
+
+    <script>
+            async function getWeather() {
+                const apiKey = "644e154f81ef477a1be8eb173a77ae9b";
+                const cityInput = document.getElementById('cityInput').value;
+                const errorMessage = document.getElementById('error-message');
+                const weatherContainer = document.getElementById('weather-container');
+        
+                try {
+                    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityInput}&appid=${apiKey}`);
+                    const data = await response.json();
+        
+                    if (response.ok) {
+                        errorMessage.textContent = ''; // Clear previous error message
+                        displayWeather(data);
+                    } else {
+                        // Display error message
+                        errorMessage.textContent = `Error: ${data.message}`;
+                        weatherContainer.innerHTML = ''; // Clear weather container
+                    }
+                } catch (error) {
+                    console.error('Error fetching weather data:', error);
+                    errorMessage.textContent = 'Error fetching weather data.';
+                    weatherContainer.innerHTML = ''; // Clear weather container
+                }
+            }
+        
+            function displayWeather(data) {
+                const weatherContainer = document.getElementById('weather-container');
+                const temperature = Math.round(data.main.temp - 273.15); // Convert from Kelvin to Celsius
+        
+                // Update weather container with fetched data
+                weatherContainer.innerHTML = `
+                    <h2>${data.name}, ${data.sys.country}</h2>
+                    <p>Temperature: ${temperature}°C</p>
+                    <p>Description: ${data.weather[0].description}</p>
+                `;
+            }
+            function getWeather() {
+            }
+    
+            function displayWeather(data) {
+               
+            }
+        </script>
+    
+</body>
+</html>
